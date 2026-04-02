@@ -1,8 +1,9 @@
 import cv2 #On importe OpenCV(cv2)
-import Traitement as T
+import Traitement as t
+import mesures as m
 
-cap= cv2.VideoCapture(0) #On crée une variable cap qui récupère le flux video.
 
+cap= cv2.VideoCapture(2) #On crée une variable cap qui récupère le flux video.
 while True: #On initie une boucle qui permet d'afficher chaque frame du flux vidéo. 
 
     ret,frame=cap.read() 
@@ -10,7 +11,10 @@ while True: #On initie une boucle qui permet d'afficher chaque frame du flux vid
 
     if not ret: break  #On arrête la boucle si la variable ret vaut false. 
     
-    T.Traitement(frame)
+    contours = t.Traitement(frame)
+    perimetre = m.perimetre(contours)
+    cv2.putText(frame, f"Perimetre : {perimetre:.0f}px", (40,40), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (0,255,0),1)
+    
     cv2.imshow('1',frame)  # On affiche l'image contenue dans frame dans une nouvelle fenêtre nommée "1" 
 
     if cv2.waitKey(1) & 0xFF == ord('q'): break # On arrête la boucle si la touche "q" est pressée 
