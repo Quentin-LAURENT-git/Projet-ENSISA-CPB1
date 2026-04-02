@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import cv2 #On importe OpenCV(cv2)
 import Traitement as t
 import mesures as m
