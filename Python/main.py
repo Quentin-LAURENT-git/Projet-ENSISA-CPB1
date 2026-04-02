@@ -11,9 +11,9 @@ while True: #On initie une boucle qui permet d'afficher chaque frame du flux vid
 
     if not ret: break  #On arrête la boucle si la variable ret vaut false. 
     
-    contours = t.Traitement(frame)
+    contours = t.traitement(frame)
     perimetre = m.perimetre(contours)
-    cv2.putText(frame, f"Perimetre : {perimetre:.0f}px", (40,40), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (0,255,0),1)
+    cv2.putText(frame, f"Perimetre : {perimetre:.0f} px", (40,40), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (0,255,0),1)
     
     cv2.imshow('1',frame)  # On affiche l'image contenue dans frame dans une nouvelle fenêtre nommée "1" 
 
