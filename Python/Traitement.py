@@ -43,6 +43,7 @@ def Sobel(gray,seuil):
     return binary
 
 def contours(binary):
+    #À Compléter
     """Retourne les contours extérieurs de tous les objets de l'image sous la forme d'une liste de contours"""
     return
     
