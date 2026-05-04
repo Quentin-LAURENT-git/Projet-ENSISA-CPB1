@@ -42,9 +42,11 @@ def Sobel(gray,seuil):
 
     return binary
 
+
 def contours(binary):
     #À Compléter
     """Retourne les contours extérieurs de tous les objets de l'image sous la forme d'une liste de contours"""
+    contours = []
     return
     
     
@@ -53,14 +55,7 @@ def traitement(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     binary = Sobel(gray, 50)
     contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    filtre =[]
-    
-    for contour in contours:
-        
-        if cv2.contourArea(contour) > 1000 :
-            filtre.append(contour)
-            
-    cv2.drawContours(frame,filtre,-1,(0,255,0),cv2.FILLED)
-    return filtre
+    cv2.drawContours(frame, contours,-1,(0,255,0),cv2.FILLED)
+    return contours
     #return binary
 
