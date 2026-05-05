@@ -18,8 +18,7 @@ while True: #On initie une boucle qui permet d'afficher chaque frame du flux vid
     if not ret: break  #On arrête la boucle si la variable ret vaut false. 
     
     
-    if ratio_px_mm == -1:
-        ratio_px_mm,ratio_mm_px = o.caliration(frame)
+    
     
     contours = t.traitement(frame)
     perimetre,aire,largeur,hauteur = m.mesures(contours)
@@ -30,6 +29,9 @@ while True: #On initie une boucle qui permet d'afficher chaque frame du flux vid
     
     
     cv2.imshow('1',frame)  # On affiche l'image contenue dans frame dans une nouvelle fenêtre nommée "1" 
+    
+    if ratio_px_mm == -1:
+        ratio_px_mm,ratio_mm_px = o.caliration(frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'): break # On arrête la boucle si la touche "q" est pressée 
 
