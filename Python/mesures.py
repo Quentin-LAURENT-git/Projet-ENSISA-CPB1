@@ -37,4 +37,4 @@ def mesures(contours):
     p = perimetre(contour)
     a = aire(contour)
     d = dimensions(contour)
-    return p,a,d
+    return float(p),float(a),float(d[0]),float(d[1])

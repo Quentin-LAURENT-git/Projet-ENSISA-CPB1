@@ -4,8 +4,11 @@
 import cv2 #On importe OpenCV(cv2)
 import Traitement as t
 import mesures as m
+import optique as o
 
 
+
+ratio_px_mm = -1
 cap= cv2.VideoCapture(0) #On crée une variable cap qui récupère le flux video.
 while True: #On initie une boucle qui permet d'afficher chaque frame du flux vidéo. 
 
@@ -14,12 +17,16 @@ while True: #On initie une boucle qui permet d'afficher chaque frame du flux vid
 
     if not ret: break  #On arrête la boucle si la variable ret vaut false. 
     
-    contours = t.traitement(frame)
-    perimetre,aire,dimensions = m.mesures(contours)
     
-    cv2.putText(frame, f"Perimetre  : {perimetre} px",          (40, 40),  cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
-    cv2.putText(frame, f"Aire       : {aire} px2",               (40, 65),  cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
-    cv2.putText(frame, f"Dimensions : {dimensions[0]}x{dimensions[1]} px", (40, 90),  cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
+    if ratio_px_mm == -1:
+        ratio_px_mm,ratio_mm_px = o.caliration(frame)
+    
+    contours = t.traitement(frame)
+    perimetre,aire,largeur,hauteur = m.mesures(contours)
+    
+    cv2.putText(frame, f"Perimetre  : {perimetre*ratio_px_mm:.2f} mm",(40, 40),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
+    cv2.putText(frame, f"Aire       : {aire*ratio_px_mm**2:.2f} mm2",(40, 65),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
+    cv2.putText(frame, f"Dimensions : {largeur*ratio_px_mm:.2f}x{hauteur*ratio_px_mm:.2f} mm",(40, 90),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
     
     
     cv2.imshow('1',frame)  # On affiche l'image contenue dans frame dans une nouvelle fenêtre nommée "1" 

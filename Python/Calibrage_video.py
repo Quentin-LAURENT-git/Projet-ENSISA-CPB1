@@ -3,7 +3,7 @@ import numpy as np
 
 longueur_reele_mm = float(input("Longueur reelle  : "))
 
-cap = cv2.VideoCapture(0)
+"""cap = cv2.VideoCapture(0)
 
 frame = None
 
@@ -29,7 +29,8 @@ while True:
         break
 
 cap.release()
-cv2.destroyAllWindows()
+cv2.destroyAllWindows()"""
+
 
 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
