@@ -1,4 +1,6 @@
-# Python
+# .gitignore 
+venv_Projet_CPB1_ENSISA/
 __pycache__/
 *.pyc
-*.pyo
+*.pyd
+.env
