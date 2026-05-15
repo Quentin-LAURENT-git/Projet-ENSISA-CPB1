@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#fichier : mesures.py
 
 import numpy as np
+from numba import njit
 
 """Mesure du périmètre d'un contour """
 def perimetre(contour):    
@@ -19,15 +21,35 @@ def aire(contour):
     a = 0.5 * abs(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
     return a
 
-
+@njit
 def dimensions(contour):
-    pts = contour.reshape(-1, 2)
+    pts = contour.reshape(-1, 2).astype(np.float64)
+
     x_min, y_min = pts.min(axis=0)
     x_max, y_max = pts.max(axis=0)
-    largeur = x_max - x_min
-    hauteur = y_max - y_min
-    dims =(largeur,hauteur)
+    aire = (x_max - x_min) * (y_max - y_min)
+    dims = (x_max - x_min, y_max - y_min)
+
+    rad = np.pi / 180
+    c = np.cos(rad)
+    s = np.sin(rad)
     
+    for _ in range(360):
+        for i in range(len(pts)):
+            x, y = pts[i]
+            pts[i][0] = x * c - y * s
+            pts[i][1] = x * s + y * c
+
+        x_min, y_min = pts.min(axis=0)
+        x_max, y_max = pts.max(axis=0)
+        largeur = x_max - x_min
+        hauteur = y_max - y_min
+        aire2 = largeur * hauteur
+
+        if aire2 < aire:
+            aire = aire2
+            dims = (largeur, hauteur)
+
     return dims
 
 
@@ -38,3 +60,44 @@ def mesures(contours):
     a = aire(contour)
     d = dimensions(contour)
     return float(p),float(a),float(d[0]),float(d[1])
+@njit
+def dimensions(contour):
+    pts = contour.reshape(-1, 2).astype(np.float64)
+    
+    x_min = pts[0, 0]
+    x_max = pts[0, 0]
+    y_min = pts[0, 1]
+    y_max = pts[0, 1]
+    for i in range(len(pts)):
+        if pts[i, 0] < x_min: x_min = pts[i, 0]
+        if pts[i, 0] > x_max: x_max = pts[i, 0]
+        if pts[i, 1] < y_min: y_min = pts[i, 1]
+        if pts[i, 1] > y_max: y_max = pts[i, 1]
+
+    aire = (x_max - x_min) * (y_max - y_min)
+    dims = (x_max - x_min, y_max - y_min)
+    rad = np.pi / 180
+    c = np.cos(rad)
+    s = np.sin(rad)
+
+    for _ in range(360):
+        for i in range(len(pts)):
+            x = pts[i, 0]
+            y = pts[i, 1]
+            pts[i, 0] = x * c - y * s
+            pts[i, 1] = x * s + y * c
+
+        x_min = pts[0, 0]; x_max = pts[0, 0]
+        y_min = pts[0, 1]; y_max = pts[0, 1]
+        for i in range(len(pts)):
+            if pts[i, 0] < x_min: x_min = pts[i, 0]
+            if pts[i, 0] > x_max: x_max = pts[i, 0]
+            if pts[i, 1] < y_min: y_min = pts[i, 1]
+            if pts[i, 1] > y_max: y_max = pts[i, 1]
+
+        aire2 = (x_max - x_min) * (y_max - y_min)
+        if aire2 < aire:
+            aire = aire2
+            dims = (x_max - x_min, y_max - y_min)
+
+    return dims

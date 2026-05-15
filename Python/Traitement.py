@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#fichier : traitement.py
+
+
 import cv2
 import numpy as np
 
