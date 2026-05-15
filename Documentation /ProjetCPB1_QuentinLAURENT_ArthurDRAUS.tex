@@ -1,0 +1,150 @@
+% !TeX TS-program = lualatex
+\documentclass[titlepage]{article}
+
+\usepackage[a4paper]{geometry}
+\usepackage[french]{babel}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\setmainfont{Liberation Sans}
+
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\definecolor{codegreen}{rgb}{0,0.5,0}
+\definecolor{codeblue}{rgb}{0,0,0.7}
+
+\lstdefinestyle{pythonstyle}{
+	language=Python,
+	backgroundcolor=\color{codebg},
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{codeblue}\bfseries,
+	numberstyle=\tiny\color{gray},
+	stringstyle=\color{red},
+	basicstyle=\ttfamily\small,
+	breaklines=true,
+	captionpos=b,
+	numbers=left,
+	numbersep=5pt,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	tabsize=4,
+	frame=single
+}
+
+\lstset{style=pythonstyle}
+
+\begin{document}
+	
+	\begin{titlepage}
+	\vfill
+	\centering
+	\Huge{\includegraphics[width=5cm]{ENSISA_Logo.jpg} \ \ \ \ \ \ \ \ \ \ \ \includegraphics[width=5cm]{UHA_Logo.png}	\\[2cm]Métrologie depuis un flux vidéo avec Python.}
+	\author{LAURENT Quentin \and DRAUS Arthur }\\[2cm]
+	\Large{\theauthor \\ Projet ENSISA de CPB1 } \\
+	{Année universitaire \\ 2025/2026}
+	
+	\vfill
+	\end{titlepage}
+	\normalsize
+	\tableofcontents
+	\clearpage
+	\section{Fiche de présentation du projet CPB1}
+	\subsection{Étudiants}
+	\theauthor \space Année universitaire 2025/2026.
+	\subsection{Le rapport de projet }
+	Titre du projet : "Métrologie depuis un flux vidéo avec Python."\\[0.5cm]
+	Mots clés pour décrire le projet : \\ Python, Mesures, Vidéo \\[0.5cm]
+	Court résumé du projet : \\
+	Court résumé du projet en anglais : \\
+	\clearpage
+	\subsection{Formulaire d'informations sur le plagiat }
+	Dans le règlement des examens validé par la CFVU de l’UHA, le plagiat est assimilé à une fraude.
+	Le plagiat consiste à reproduire un texte, une partie d’un texte, des données ou des images, toute production (texte ou image), ou à paraphraser un texte sans indiquer la provenance ou l’auteur. Le plagiat enfreint les règles de la déontologie universitaire et il constitue une fraude. Le plagiat constitue également une atteinte au droit d’auteur et à la propriété intellectuelle, susceptible d’être assimilé à un délit de contrefaçon.
+	En cas de plagiat dans un devoir, dossier, mémoire ou thèse, l’étudiant sera présenté à la section disciplinaire de l’université qui pourra prononcer des sanctions allant de l’avertissement à l’exclusion.
+	Dans le cas où le plagiat est aussi caractérisé comme étant une contrefaçon, d’éventuelles poursuites judiciaires pourront s’ajouter à la procédure disciplinaire. \\[0.5cm]
+	Je soussigné: \theauthor \\
+	Etudiants à l’Université de Haute Alsace en : 2025-2026\\
+	Niveau d’études : BAC\\
+	Formation ou parcours : CPB1 ENSISA\\
+	Reconnaissons avoir pris connaissance du formulaire d’information sur le plagiat.\\
+	Fait à Mulhouse 68200\\
+	Le 12/05/2026\\
+	Signatures :\\
+	\clearpage
+	
+	
+	\section{Introduction}
+	\subsection{Description du Projet}
+		Ce projet vise à mettre en place un système de métrologie en temps réel grâce à un flux vidéo acquis et traité grâce a python. Nous cherchons donc à pouvoir mesurer des objets placés devant une caméra grâce à y script Python.
+	\subsection{Applications}
+		\begin{itemize}
+			\item 
+			
+			Ce système peut, par exemple permettre de détecter des objets sur une chaîne de production et de contrôler leur taille afin de mettre en évidence les produits défectueux, sans ralentir la production.
+			\item 
+			Ce système peut également servir à créer des plans de coupe à l'échelle en mesurant la surface qu'un objet occupe sur l'image.
+			\item 
+			Nous pouvons également trouver des applications dans la recherche. Nous pouvons prendre comme exemple l'archéologie où les chercheurs classifient souvent les objet découvert par taille. Ce travail de mesure peut être grandement simplifié par des outils de métrologie numériques similaires à notre projet.
+		\end{itemize}
+	\subsection{Montage expérimental} 
+		\begin{itemize}
+			\item 
+			
+			On utilise un appareil photo Canon EOS R50 avec un objectif à focale fixe de 50 mm.
+			\item
+			On positionne l'appareil sur un trépied réglé à l'aide d'un niveau à bulle de hauteur connue d= 76 cm
+			\item
+			Le capteur doit être parallèle à la surface sur laquelle l'objet est placé.
+			\item
+			On utilise une grille pour pouvoir corriger la perspective.
+			\item
+			On connecte la caméra en USB à un ordinateur.
+			\item
+			Depuis l'ordinateur, on commence l'acquisition.
+			
+			
+		\end{itemize}
+	\subsection{Objectifs et contraintes} 
+	\raggedright
+	À travers ce projet nous voulons récupérer les mesures d'un objet quelconque suivantes : 
+		\begin{itemize}
+			\item 
+			Le périmètre de l'objet.
+			\item
+			La surface de la face de l'objet montrée à la caméra.
+			\item
+			Les dimensions de l'objet (longueur et largeur)
+		\end{itemize}
+	Afin de pouvoir mesurer correctement un objet, nous devons devons définir plusieurs contraintes :
+		\begin{itemize}
+			\item 
+			La calibration de l'appareil permet de convertir des mesures en pixels en millimètres.
+			\item 
+			Nous devons définir la précision des mesures pour savoir quels objets nous pouvons mesurer correctement.
+			\item 
+			Nous devons faire des algorithmes de traitement et de calibration d'image.
+		
+		\end{itemize}
+	\section{Code du projet}
+	\subsection{Organisation des fichiers}
+		Le code de notre projet se compose de quatre fichiers :\\
+		\begin{itemize}
+			\item 
+			Le fichier "main.py" initie et structure notre code. C'est à partir de ce fichier que nous faisons nos mesures.
+			\item 
+			Le fichier "Traitement.py" contient une fonction traitement prenant en paramètre l'image brut de la caméra et  renvoie un tableau numpy contenant les différents contours de l'objet. 
+			\item 
+			Le fichier "Mesures.py" contient un ensemble de fonctions qui renvoient les différentes mesures en pixels du plus grand contour que nous trouvons.
+			\item 
+			Le fichier "Optique.py" contient des fonctions qui renvoient le rapport de pixels par millimètre de l'image nous permettant de convertir nos mesures renvoyées par les fonctions du fichier "Mesures.py" en millimètres.\\[0.5cm]
+		\end{itemize}
+		\raggedright
+		Dans l'ensemble de nos fichiers, nous allons utiliser les librairies OpenCV (cv2) pour la gestion de la caméra et numpy (np) pour la gestion de tableaux (images)
+	\subsection{Main.py}
+	\subsection{Traitement.py}
+	\subsection{Mesures.py}
+	\subsection{Optique.py}
+\end{document}
