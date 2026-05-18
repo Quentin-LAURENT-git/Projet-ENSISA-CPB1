@@ -30,12 +30,11 @@ while True: #On initie une boucle qui permet d'afficher chaque frame du flux vid
     if ratio_px_mm == -1:
         cv2.putText(frame, "Appuyer sur 'c' pour calibrer la camera",(40, 225),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
         if key == ord("c"):
-            ratio_px_mm , ratio_mm_px = o.calibration(frame)
+            ratio_px_mm , ratio_mm_px = o.calibration(contours)
     else :
         if key & 0xFF == ord(" "):
             i+=1
         
-            contours = t.traitement(frame)
             perimetre,aire,largeur,hauteur = m.mesures(contours)
             print(f"Mesure {i} : \nPerimetre  : {perimetre*ratio_mm_px:.2f} mm\nAire       : {aire*ratio_mm_px**2:.2f} mm2\nDimensions : {largeur*ratio_mm_px:.2f}x{hauteur*ratio_mm_px:.2f} mm")
         cv2.putText(frame, "Appuyer sur espace pour prendre une mesure",(40, 200),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
