@@ -52,7 +52,7 @@
 	\clearpage
 	\section{Fiche de présentation du projet CPB1}
 	\subsection{Étudiants}
-	\theauthor \space Année universitaire 2025/2026.
+	\raggedright\theauthor \\ Année universitaire 2025/2026.
 	\subsection{Le rapport de projet }
 	Titre du projet : "Métrologie depuis un flux vidéo avec Python."\\[0.5cm]
 	Mots clés pour décrire le projet : \\ Python, Mesures, Vidéo \\[0.5cm]
@@ -219,5 +219,54 @@
 	
 	\subsection{Traitement.py}
 	\subsection{Mesures.py}
+	Ce fichier contient les fonctions qui calculent les différentes mesures de l'objet à partir des contours renvoyés par le traitement de l'image.\\ 
+	
+	\begin{itemize}
+		\item
+		On importe la bibliothèque numpy pour pouvoir travailler sur les contours de type numpy.ndarray.
+		\item 
+		On importe la bibliothèque numba pour compiler certains algorithmes trop lourds.
+	\end{itemize}
+	\begin{lstlisting}
+	import numpy as np
+	from numba import njit
+	\end{lstlisting}
+	\subsubsection{Calcul du périmètre de l'objet.}
+	\begin{lstlisting}
+	def perimetre(contour):    
+		pts = contour.reshape(-1, 2)
+		diff = pts - np.roll(pts, -1, axis=0)
+		distances = np.sqrt((diff**2).sum(axis=1))
+		p = distances.sum()
+		return p
+	\end{lstlisting}
+	\begin{itemize}
+	\item On crée un tableau de points à partir du contour. On utilise la méthode .reshape pour changer la forme du contour de (Nombre de points,1,Coordonnées du point) à (Nombre de points, Coordonnées du point) car OpenCV ajoute une dimension parasite (1) lorsque l'on utilise la fonction cv2.findContours.
+	\item 
+	On calcule la différence entre tous les points successifs. Pour cela, on soustrait la liste pts décalée de un point par la méthode np.roll à la liste de  pts. On obtient donc une liste de la forme (Nombre de points, ($x_{i} - x_{i+1}$,$y_i - y_{i+1}$).
+	\item 
+	On calcule ensuite le périmètre en faisant la somme des distances entre les points avec la formule : $$\sum\limits_{i=0}^{n-1}\sqrt{(x_i -x_{i+1})^2+(y_i -y_{i+1})^2}$$ \\
+	La méthode .sum(axis=1) fait la somme des coordonnées ($(x_{i} - x_{i+1})^2$,$(y_i - y_{i+1})^2$). Puis np.sqrt calcule la racine de cette somme pour chaque point de diff**2.
+	\item 
+	On initie la variable p qui fait la somme de tous les éléments du tableau distances. 
+	\item 
+	La fonction renvoie la variable p qui correspond au périmètre.
+	
+	
+	\end{itemize}
+	\subsubsection{Calcul de l'aire de l'objet.}
+	\begin{lstlisting}
+	def aire(contour):  
+		pts = contour.reshape(-1, 2)
+		x = pts[:, 0]
+		y = pts[:, 1]
+		a = 0.5 * abs(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
+		return a
+	\end{lstlisting}
+	\begin{itemize}
+		\item 
+		
+		
+	\end{itemize}
 	\subsection{Optique.py}
 \end{document}
