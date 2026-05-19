@@ -8,7 +8,6 @@
 \usepackage{titling}
 \usepackage{xcolor}
 \usepackage{listings}
-
 \setmainfont{Liberation Sans}
 
 \definecolor{codebg}{rgb}{0.95,0.95,0.95}
@@ -24,14 +23,14 @@
 	stringstyle=\color{red},
 	basicstyle=\ttfamily\small,
 	breaklines=true,
-	captionpos=b,
+	breakatwhitespace=false,
 	numbers=left,
 	numbersep=5pt,
 	showspaces=false,
 	showstringspaces=false,
 	showtabs=false,
 	tabsize=4,
-	frame=single
+	frame=lines
 }
 
 \lstset{style=pythonstyle}
@@ -143,7 +142,81 @@
 		\end{itemize}
 		\raggedright
 		Dans l'ensemble de nos fichiers, nous allons utiliser les librairies OpenCV (cv2) pour la gestion de la caméra et numpy (np) pour la gestion de tableaux (images)
+	
 	\subsection{Main.py}
+	Ce fichier contient la boucle principale de notre code à partir de laquelle nous appelons nos fonctions.
+	
+	
+	On importe la bibliothèque OpenCV (cv2) ainsi que les trois autres fichiers du projet
+	\begin{lstlisting}
+	import cv2 
+	import Traitement as t
+	import mesures as m
+	import optique as o
+	\end{lstlisting}
+	\begin{itemize}
+		\item
+		On définit les variables de calibration et de mesure ainsi qu'un compteur qui enregistre le nombre de mesures.
+		\item
+		On définit la variable cap qui va récupérer le flux vidéo de la caméra.
+	\end{itemize}
+	\begin{lstlisting}
+	
+	ratio_px_mm = -1
+	ratio_mm_px = -1
+	i=0
+	perimetre,aire,largeur,hauteur = (0,0,0,0)
+	cap= cv2.VideoCapture(0)
+	\end{lstlisting}
+	\begin{itemize}
+		\item
+		On initie une boucle infinie dans laquelle on exécute le reste du programme.
+		\item
+		On définie une variable key qui enregistre la touche du clavier pressée.
+		\item
+		On définit la variable frame (type numpy.ndarray)qui stocke l'information du flux vidéo dans un tableau de pixels RVB.
+		\item
+		On définit une variable ret (type booléen) qui renvoie True si cap enregistre un flux vidéo et False sinon.
+	\end{itemize}
+	\begin{lstlisting}
+	while True: 
+	
+		key = cv2.waitKey(1)
+		ret,frame=cap.read()
+		
+		if not ret: break  
+		contours = t.traitement(frame)
+	\end{lstlisting}
+	\begin{lstlisting}
+		if ratio_px_mm == -1:
+		
+			cv2.putText(frame, "Appuyer sur 'c' pour calibrer la camera",(40, 225),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
+			
+			if key == ord("c"):
+			
+				ratio_px_mm , ratio_mm_px = o.calibration(frame)
+		else :
+			if key & 0xFF == ord(" "):
+				
+				i+=1
+				perimetre,aire,largeur,hauteur = m.mesures(contours)
+				print(f"Mesure {i} : \nPerimetre  : {perimetre*ratio_mm_px:.2f} mm\nAire       : {aire*ratio_mm_px**2:.2f} mm2\nDimensions : {largeur*ratio_mm_px:.2f}x{hauteur*ratio_mm_px:.2f} mm")
+			cv2.putText(frame, "Appuyer sur espace pour prendre une mesure",(40, 200),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
+	
+	
+		cv2.putText(frame, f"Perimetre  : {perimetre*ratio_mm_px:.2f} mm",(40, 40),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
+		cv2.putText(frame, f"Aire       : {aire*ratio_mm_px**2:.2f} mm2",(40, 65),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
+		cv2.putText(frame, f"Dimensions : {largeur*ratio_mm_px:.2f}x{hauteur*ratio_mm_px:.2f} mm",(40, 90),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
+		cv2.imshow('1',frame)   
+	
+	
+		if key & 0xFF == ord('q'): break 
+	
+	
+	cap.release() 
+	cv2.destroyAllWindows() 
+	\end{lstlisting}
+	
 	\subsection{Traitement.py}
 	\subsection{Mesures.py}
 	\subsection{Optique.py}
