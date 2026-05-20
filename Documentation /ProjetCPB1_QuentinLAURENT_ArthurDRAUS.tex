@@ -92,13 +92,13 @@
 		\begin{itemize}
 			\item 
 			
-			On utilise un appareil photo Canon EOS R50 avec un objectif à focale fixe de 50 mm.
+			On utilise un appareil photo Canon EOS R50 avec un objectif à focale fixe de 50 mm afin de minimiser les aberrations optiques.
 			\item
-			On positionne l'appareil sur un trépied réglé à l'aide d'un niveau à bulle de hauteur connue d= 76 cm
+			On positionne l'appareil sur un trépied réglé à l'aide d'un niveau à bulle de hauteur connue.
 			\item
 			Le capteur doit être parallèle à la surface sur laquelle l'objet est placé.
 			\item
-			On utilise une grille pour pouvoir corriger la perspective.
+			On utilise une grille pour faire ressortir l'objet mesuré de l'arrière plan.
 			\item
 			On connecte la caméra en USB à un ordinateur.
 			\item
@@ -115,7 +115,7 @@
 			\item
 			La surface de la face de l'objet montrée à la caméra.
 			\item
-			Les dimensions de l'objet (longueur et largeur)
+			Les dimensions de l'objet (longueur et largeur)\\[0.5cm]
 		\end{itemize}
 	Afin de pouvoir mesurer correctement un objet, nous devons devons définir plusieurs contraintes :
 		\begin{itemize}
@@ -163,7 +163,6 @@
 		On définit la variable cap qui va récupérer le flux vidéo de la caméra.
 	\end{itemize}
 	\begin{lstlisting}
-	
 	ratio_px_mm = -1
 	ratio_mm_px = -1
 	i=0
@@ -197,6 +196,16 @@
 			if key == ord("c"):
 			
 				ratio_px_mm , ratio_mm_px = o.calibration(frame)
+	\end{lstlisting}
+	\begin{itemize}
+		\item 
+		On vérifie si le ratio de calibration n'a pas encore été défini (valeur par défaut −1).
+		\item
+		Si c'est le cas, on affiche un message à l'écran invitant l'utilisateur à appuyer sur 'c' pour calibrer la caméra.
+		\item
+		Si la touche 'c' est pressée, on appelle la fonction de calibration du fichier optique qui retourne les deux ratios de conversion pixels/mm et mm/pixels.
+	\end{itemize}
+	\begin{lstlisting}
 		else :
 			if key & 0xFF == ord(" "):
 				
@@ -204,8 +213,18 @@
 				perimetre,aire,largeur,hauteur = m.mesures(contours)
 				print(f"Mesure {i} : \nPerimetre  : {perimetre*ratio_mm_px:.2f} mm\nAire       : {aire*ratio_mm_px**2:.2f} mm2\nDimensions : {largeur*ratio_mm_px:.2f}x{hauteur*ratio_mm_px:.2f} mm")
 			cv2.putText(frame, "Appuyer sur espace pour prendre une mesure",(40, 200),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
-	
-	
+	\end{lstlisting}
+	\begin{itemize}
+		\item
+		Une fois la calibration effectuée, on entre dans le bloc else.
+		\item
+		Si l'utilisateur appuie sur la touche espace, on incrémente le compteur de mesures i, puis on appelle la fonction mesures du fichier mesures qui retourne le périmètre, l'aire, la largeur et la hauteur de l'objet détecté.
+		\item
+		On affiche ensuite dans le terminal les valeurs converties en millimètres grâce aux ratios calculés lors de la calibration.
+		\item
+		On affiche également un message à l'écran indiquant à l'utilisateur comment déclencher une mesure.
+	\end{itemize}
+	\begin{lstlisting}
 		cv2.putText(frame, f"Perimetre  : {perimetre*ratio_mm_px:.2f} mm",(40, 40),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
 		cv2.putText(frame, f"Aire       : {aire*ratio_mm_px**2:.2f} mm2",(40, 65),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
 		cv2.putText(frame, f"Dimensions : {largeur*ratio_mm_px:.2f}x{hauteur*ratio_mm_px:.2f} mm",(40, 90),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
@@ -213,12 +232,27 @@
 	
 	
 		if key & 0xFF == ord('q'): break 
-	
-	
+	\end{lstlisting}
+
+	\begin{itemize}
+		\item
+		Indépendamment de l'état de calibration, on affiche en permanence sur l'image les dernières valeurs de périmètre, d'aire et de dimensions enregistrées, 	converties en millimètres.
+		\item
+		On affiche la frame courante dans une fenêtre nommée "1".
+		\item
+		On arrête la boucle si la touche 'q' est pressée.
+	\end{itemize}
+
+	\begin{lstlisting}
 	cap.release() 
 	cv2.destroyAllWindows() 
 	\end{lstlisting}
-	
+	\begin{itemize}
+		\item 
+		Une fois la boucle terminée, on libère la caméra afin qu'elle reste accessible pour d'autres programmes.
+		\item 
+		On ferme toutes les fenêtres ouvertes par OpenCV.
+	\end{itemize}
 	\subsection{Traitement.py}
 	\subsection{Mesures.py}
 	Ce fichier contient les fonctions qui calculent les différentes mesures de l'objet à partir des contours renvoyés par le traitement de l'image.\\ 
@@ -319,4 +353,34 @@
 		return float(p),float(a),float(d[0]),float(d[1])
 	\end{lstlisting}
 	\subsection{Optique.py}
+	\begin{lstlisting}
+		import cv2 
+		import numpy as np
+		import Traitement as t 
+		import mesures as m
+		
+		def calibration(contours):
+			flotant =  False
+			while flotant is not True :
+				try :
+					longueur_reele_mm = float(input("Longueur reelle de l'objet de calibration (mm) : "))
+					flotant = True
+				except : 
+					flotant = False 
+			if not contours:
+				print("Aucun contour détecté")
+				return -1, -1
+		
+			contour = max(contours, key=lambda c: m.aire(c))
+			largeur_px, hauteur_px = m.dimensions(contour)
+			longueur_px = max(largeur_px, hauteur_px)
+		
+			ratio_px_par_mm = longueur_px / longueur_reele_mm
+			ratio_mm_par_px = longueur_reele_mm / longueur_px
+		
+			print(f"Longueur en pixels : {longueur_px:.1f} px")
+			print(f"Ratio : {ratio_px_par_mm:.3f} px/mm")
+		
+			return float(ratio_px_par_mm), float(ratio_mm_par_px)
+	\end{lstlisting}
 \end{document}

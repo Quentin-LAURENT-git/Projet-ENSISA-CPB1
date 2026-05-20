@@ -40,8 +40,13 @@ import mesures as m
     return float(ratio_px_par_mm), float(ratio_mm_par_px)"""
 
 def calibration(contours):
-    longueur_reele_mm = float(input("Longueur reelle de l'objet de calibration (mm) : "))
-
+    flotant =  False
+    while flotant is not True :
+        try :
+            longueur_reele_mm = float(input("Longueur reelle de l'objet de calibration (mm) : "))
+            flotant = True
+        except : 
+            flotant = False 
     if not contours:
         print("Aucun contour détecté")
         return -1, -1
