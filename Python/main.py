@@ -14,7 +14,7 @@ ratio_mm_px = -1
 i=0
 perimetre,aire,largeur,hauteur = (0,0,0,0)
 
-cap= cv2.VideoCapture(0) #On crée une variable cap qui récupère le flux video.
+cap= cv2.VideoCapture(2) #On crée une variable cap qui récupère le flux video.
 
 while True: #On initie une boucle qui permet d'afficher chaque frame du flux vidéo. 
     key = cv2.waitKey(1)
@@ -28,7 +28,7 @@ while True: #On initie une boucle qui permet d'afficher chaque frame du flux vid
     contours = t.traitement(frame)
     
     if ratio_px_mm == -1:
-        cv2.putText(frame, "Appuyer sur 'c' pour calibrer la camera",(40, 225),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
+        cv2.putText(frame, "Appuyer sur 'c' pour calibrer la camera",(40, 225),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
         if key == ord("c"):
             ratio_px_mm , ratio_mm_px = o.calibration(contours)
     else :
@@ -37,14 +37,14 @@ while True: #On initie une boucle qui permet d'afficher chaque frame du flux vid
         
             perimetre,aire,largeur,hauteur = m.mesures(contours)
             print(f"Mesure {i} : \nPerimetre  : {perimetre*ratio_mm_px:.2f} mm\nAire       : {aire*ratio_mm_px**2:.2f} mm2\nDimensions : {largeur*ratio_mm_px:.2f}x{hauteur*ratio_mm_px:.2f} mm")
-        cv2.putText(frame, "Appuyer sur espace pour prendre une mesure",(40, 200),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
+        cv2.putText(frame, "Appuyer sur espace pour prendre une mesure",(40, 200),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
             
             
-    cv2.putText(frame, f"Perimetre  : {perimetre*ratio_mm_px:.2f} mm",(40, 40),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
-    cv2.putText(frame, f"Aire       : {aire*ratio_mm_px**2:.2f} mm2",(40, 65),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
-    cv2.putText(frame, f"Dimensions : {largeur*ratio_mm_px:.2f}x{hauteur*ratio_mm_px:.2f} mm",(40, 90),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
+    cv2.putText(frame, f"Perimetre  : {perimetre*ratio_mm_px:.2f} mm",(40, 40),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
+    cv2.putText(frame, f"Aire       : {aire*ratio_mm_px**2:.2f} mm2",(40, 65),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
+    cv2.putText(frame, f"Dimensions : {largeur*ratio_mm_px:.2f}x{hauteur*ratio_mm_px:.2f} mm",(40, 90),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
     cv2.imshow('1',frame)  # On affiche l'image contenue dans frame dans une nouvelle fenêtre nommée "1" 
-    
+    c
 
     if key & 0xFF == ord('q'): break # On arrête la boucle si la touche "q" est pressée 
 

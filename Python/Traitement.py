@@ -5,6 +5,7 @@
 
 import cv2
 import numpy as np
+import mesures as m
 
 """On définit un filtre de Sobel pour remplacer cv2.Canny"""
 
@@ -57,8 +58,9 @@ def traitement(frame):
     
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     binary = Sobel(gray, 50)
-    contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    cv2.drawContours(frame, contours,-1,(0,255,0),cv2.FILLED)
+    contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    #contour = max(contours, key=lambda c: m.aire(c))
+    cv2.drawContours(frame, contours,-1,(0,255,0))
     return contours
     #return binary
 
